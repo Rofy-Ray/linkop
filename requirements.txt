@@ -5,6 +5,7 @@ dj-database-url==2.1.0
 Django==5.0.2
 django-bootstrap5==23.4
 django-cloudinary-storage==0.3.0
+django-bootstrap-datepicker-plus==5.0.5
 gunicorn==21.2.0
 pillow==10.2.0
 psycopg-binary==3.1.18
