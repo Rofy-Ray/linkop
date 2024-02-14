@@ -1,3 +1,5 @@
-.env
-.venv
 .lika
+.venv
+.gitignore
+.DS_Store
+.env
