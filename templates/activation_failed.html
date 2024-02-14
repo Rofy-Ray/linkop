@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Failed Activation
+{% endblock %}
+
+{% block content %}
+    <h1 class="text-center">Account Activation Failed</h1>
+
+    <div class="card text-bg-light mb-3 border-dnager">
+        <div class="card-header">
+            <h2 class="card-title">
+                Sorry, your account could not be activated.
+            </h2>
+        </div>
+        <div class="card-body">
+          <p class="card-text"><b>Please check your email and make sure your link is not expired. If so, then kindly get a new activation link for use.</b> {{ event.description }}</p>
+        </div>
+    </div>
+
+{% endblock %}

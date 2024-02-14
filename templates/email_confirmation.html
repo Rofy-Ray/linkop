@@ -1,0 +1,12 @@
+<p>Hey there!</p>
+
+<p>Let's Get You Set Up!!!</p>
+
+<p>Hello {{ email }}!</p>
+
+<p>Please verify your email by clicking on the following link:</p>
+
+<a href="{{ protocol }}://{{ domain }}{% url 'activate' uidb64=uid token=token %}">Activate your account</a>
+
+<p>Thanks,</p>
+<p>The Linkop Team</p>

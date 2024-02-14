@@ -1,0 +1,160 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    User Profile
+{% endblock %}
+
+{% block content %}
+    <div class="vh-100">
+        <div class="d-flex justify-content-center align-items-center">
+        <div class="col col-lg-9 mb-4 mb-lg-0">
+            {% if user.first_name or user.last_name or user.fun_fact or user.short_bio or user.photo %}
+            <div class="card mb-3" style="border-radius: .5rem;">
+                <div class="row g-0">
+                    <div class="col-md-4 gradient-custom text-center text-white"
+                    style="border-radius: .5rem;">
+                    {% if user.photo %}
+                    <img src="{{ user.photo.url }}"
+                        alt="User Avatar" class="img-fluid my-5" style="width: 100px; border-radius: 50%; object-fit: contain;" />
+                    {% endif %}
+                    <h4>{{ user.first_name }} {{ user.last_name }}</h4>
+                    <p>{{ user.fun_fact }}</p>
+
+                    {% if request.user.id == user.id %}
+                        <a href="{% url 'update_profile' %}"><i class="bi bi-pencil-square fs-5 mb-5"></i></a>
+                    {% endif %}
+                    {% if is_own_profile %}
+                        <a href="{% url 'message_inbox' %}"><i class="bi bi-inbox-fill fs-5"></i></a>
+                    {% endif %}
+
+                    {% if not is_event_host and request.user != user %}
+                        <form action="{% url 'pick_interest' user_id=user.pk %}" method="post">
+                            {% csrf_token %}
+                            {% if user in request.user.interests.all %}
+                                <button type="submit" name="toggle_interest" value="unpick" class="btn btn-warning btn-outline-dark mb-1">Unpick Interest</button>
+                            {% else %}
+                                <button type="submit" name="toggle_interest" value="pick" class="btn btn-info btn-outline-dark mb-1">Pick Interest</button>
+                            {% endif %}
+                        </form>
+                    {% endif %} 
+                    </div>
+                    <div class="col-md-8 text-dark">
+                    <div class="card-body p-4">
+
+                        <h6>About Me</h6>
+                        <hr class="mt-0 mb-4">
+                        <div class="row pt-1">
+                        <div class="col-12 mb-3">
+                            <h6>Bio</h6>
+                            <p class="text-muted">{{ user.short_bio }}</p>
+                        </div>
+                        </div>
+
+                        {% if past_events %}
+                            <h6>Hosted Events</h6>
+                            <hr class="mt-0 mb-4">
+                            <div class="row pt-1">
+                            <div class="col-12 mb-3">
+                                {% for event in past_events %}
+                                    <a href="{% url 'event_details' event_id=event.pk %}"><h6>{{ event.title }}</h6></a>
+                                {% endfor %}
+                            </div>
+                            </div>
+                        {% endif %}
+
+                    </div>
+                    </div>
+                </div>
+            </div>
+            {% else %}
+                <div class="d-flex justify-content-center align-items-center">
+                    <a href="{% url 'update_profile' %}" class="btn btn-info btn-lg">Add Profile</a>
+                </div>
+            {% endif %}
+        </div>
+        </div>
+
+    {% if notifications or messages or can_message_each_other %}
+        <div class="d-flex justify-content-center align-items-center pb-5">
+        <div class="col col-lg-9 mb-4 mb-lg-0">
+            <div class="card mb-3" style="border-radius: .5rem;">
+            <div class="row g-0">
+                <div class="col-md-12 text-dark">
+                <div class="card-body p-4">
+
+                    {% if notifications %}
+                    <h6>Notifications</h6>
+                    <hr class="mt-0 mb-4">
+                    <div class="row pt-1">
+                    <div class="col-12 mb-3">
+                        <ul class="list-group list-group-flush">
+                            {% for notification in notifications %}
+                            <li class="list-group-item">
+                                {{ notification.content }}
+                                <a href="{% url 'mark_notification_as_read' user_id=request.user.id notification_id=notification.id %}" class="float-end">
+                                    <button type="submit">
+                                        <p class="card-text">
+                                            <i class="bi bi-envelope-paper-fill"></i>
+                                        </p>
+                                    </button>
+                                </a>
+                                {% with sender=notification.sender %}
+                                    {% if sender in senders_with_interest %}
+                                        <form action="{% url 'pick_interest' user_id=sender.id %}" method="post">
+                                            {% csrf_token %}
+                                            <button type="submit" class="card-text rounded">Return Interest</button>
+                                        </form>
+                                    {% endif %}
+                                {% endwith %}
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    </div>    
+                    {% endif %}
+
+                    {% if messages %}
+                        <h6>Messages</h6>
+                        <hr class="mt-0 mb-4">
+                        <div class="row pt-1">
+                        <div class="col-12 mb-3">
+                            <h6>Received Messages</h6>
+                            <ul class="messages list-group list-group-flush">
+                                {% for message in messages %}
+                                    <li{% if message.tags %} class="{{ message.tags }}"{% endif %} class="list-group-item"><p class="card-text">{{ message }}</p></li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                        </div>                        
+                    {% endif %}
+
+                    
+                    {% if can_message_each_other %}
+                        <h6>Message {{ user.name }}</h6>
+                        <hr class="mt-0 mb-4">
+                        <div class="row pt-1">
+                        <div class="col-12 mb-3">
+                            <h6>Say Something</h6>
+                            <form action="{% url 'send_message' receiver_id=user.pk %}" method="post">
+                                {% csrf_token %}
+                                <div class="form-outline mb-1">
+                                    <textarea name="content" placeholder="Type your message here" class="form-control"></textarea>
+                                    <div class="pt-1 mb-1">
+                                        <button type="submit" class="btn btn-success btn-outline-dark">Send Message</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        </div>                        
+                    {% endif %}
+
+                </div>
+                </div>
+            </div>
+            </div>
+        </div>
+        </div>
+    </div>
+    {% endif %}
+
+{% endblock %}

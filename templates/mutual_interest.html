@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Mutual Interests
+{% endblock %}
+
+{% block content %}
+    <h1>Mutual Interests</h1>
+    <ul>
+        {% for user in mutual_interests %}
+            <li><a href="{% url 'user_profile' user_id=user.pk %}">{{ user.name }}</a></li>
+        {% endfor %}
+    </ul>
+{% endblock %}

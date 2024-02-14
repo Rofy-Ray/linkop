@@ -1,0 +1,131 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Event Details
+{% endblock %}
+
+{% block content %}
+    <h1 class="text-center">Event Details</h1>
+
+    <div class="card text-bg-light mb-3 border-info">
+        <div class="card-header">
+            <h2 class="card-title">
+                {{ event.title }}
+            </h2>
+        </div>
+        <div class="card-body">
+          <p class="card-text"><b>Vibe?</b> {{ event.description }}</p>
+            {% if request.user.is_authenticated %}
+                <p class="card-text"><b>When?</b> {{ event.date }}</p>
+                <p class="card-text"><b>Time?</b> {{ event.time }}</p>
+                <p class="card-text"><b>Where?</b> {{ event.location }}</p>
+                <p class="card-text"><b>Host?</b> {% if request.user.name == event.host.name %} Me {% else %} <a href="{% url 'user_profile' event.host.id %}">{{ event.host.name }}</a> {% endif %}</p>
+            
+                {% if not is_event_host and not event.is_past_event %}
+                    {% if request.user in event.interested_users.all %}
+                        <form action="{% url 'toggle_interest' event_id=event.pk %}" method="post">
+                            {% csrf_token %}
+                            <span><b>RSVP?</b> </span><button type="submit" class="btn btn-success">Going</button>
+                        </form>
+                    {% else %}
+                        <form action="{% url 'toggle_interest' event_id=event.pk %}" method="post">
+                            {% csrf_token %}
+                            <span><b>RSVP?</b> </span><button type="submit" class="btn btn-warning">Not Going</button>
+                        </form>
+                    {% endif %}
+                {% endif %}
+            {% else %}
+                    <p class="card-text">This event is upcoming. Stay tuned for reviews and ratings after the event!</p>
+                    <span> <a href="{% url 'register' %}">Register</a> or <a href="{% url 'login' %}">Login</a> to see event details. </span>
+            {% endif %}
+        </div>
+    </div>
+    
+
+    {% if event.is_past_event %}
+        {% if reviews or user_review %}
+        <div class="card text-bg-light mb-3 border-dark pb-15">
+            <div class="card-header">
+                <h4 class="card-title">
+                    Ratings and Reviews
+                </h4>
+            </div>
+            <div class="card-body">
+              <p class="card-text"><b>Average Rating?</b> {{ event.average_rating }}</p>
+              <p class="card-text"><b>Reviews: </b></p>
+              <ul class="list-group list-group-flush">
+                {% for review in reviews %}
+                    <li class="list-group-item"><p class="card-text">{{ review.reviewer.name }} <br> - Rating: {{ review.rating }} <br> - Comment: {{ review.comment }}</p></li>
+                {% endfor %}
+              </ul>
+
+                {% if user_review %}
+                    <p class="card-text">Your Rating: {{ user_review.rating }}</p>
+                    <p class="card-text">Your Comment: {{ user_review.comment }}</p>
+                {% endif %}
+
+            </div>
+        </div>
+        {% endif %}
+
+        {% if request.user != event.host and not user_review %}
+        <div class="pb-5">
+            <div class="card text-bg-light border-secondary mb-3 pb-5">
+                <div class="card-header">
+                    <h4 class="card-title">
+                        Rate and Comment on Event
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <form action="{% url 'event_details' event_id=event.pk %}" method="post">
+                        {% csrf_token %}
+                            <div class="form-outline mb-1">
+                                <select name="rating" id="rating" class="form-control">
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                </select>
+                                <label class="form-label" for="rating">Rating</label>
+                            </div>
+
+
+                            <div class="form-outline mb-1">
+                                <textarea name="comment" id="comment" class="form-control" ></textarea>
+                                <label class="form-label" for="comment">Comment</label>
+                            </div>
+
+
+                            <div class="pt-1 mb-1">
+                                <button type="submit" class="btn btn-secondary btn-outline-dark">
+                                    Submit Review
+                                </button>
+                            </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    
+    
+        {% elif has_toggled_interest and event.interested_users.all|length > 1 %}
+            <div class="card text-bg-light mb-3 border-success pb-5">
+                <div class="card-header">
+                    <h4 class="card-title">
+                        Who Else is Going?
+                    </h4>
+                </div>
+                <div class="card-body">
+                    {% for user in event.interested_users.all %}
+                        {% if user != request.user %}
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item"><a href="{% url 'user_profile' user.id %}"><p class="card-text">{{ user.name }}</p></a></li>
+                        </ul>
+                        {% endif %}
+                    {% endfor %}                 
+                </div>
+            </div>
+    {% endif %}
+
+{% endblock %}
