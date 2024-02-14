@@ -1,2 +1,2 @@
-# linkop
+# LINKOP
 Official Web App for Linkop
