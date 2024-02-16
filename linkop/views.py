@@ -37,7 +37,7 @@ def register(request):
             user.save()
             
             welcome_subject = "What brought you here?"
-            welcome_message = f"Hi, {user.first_name}!\n\nI'm really glad you've decided to try Linkop! I'm Rofy, one of the co-founders.\n\nI'm curious: what's happening in your world that brought you to Linkop?\n\n(We're a small startup, and it's always helpful to hear why people signed up).\n\nAlso, how did you hear about us?\n\nThanks,\nRofy Ray\nCo-Founder, Linkop"
+            welcome_message = f"Hey there!\n\nI'm really glad you've decided to try Linkop! I'm Rofy, one of the co-founders.\n\nI'm curious: what's happening in your world that brought you to Linkop?\n\n(We're a small startup, and it's always helpful to hear why people signed up).\n\nAlso, how did you hear about us?\n\nThanks,\nRofy Ray\nCo-Founder, Linkop"
             from_email = settings.EMAIL_HOST_USER
             to_list = [user.email]
             send_mail(welcome_subject, welcome_message, from_email, to_list, fail_silently=False)
