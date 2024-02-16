@@ -62,8 +62,11 @@ def register(request):
             
             return redirect('login')
         else:
-            if 'password2' in form.errors:
-                messages.error(request, "The passwords you entered do not match. Please try again.")
+            for field in form:
+                for error in field.errors:
+                    messages.error(request, f"{field.label}: {error}")
+            # if 'password2' in form.errors:
+            #     messages.error(request, "The passwords you entered do not match. Please try again.")
     else:
         form = CustomUserCreationForm()
     return render(request, 'registration_form.html', {'form': form})
@@ -100,7 +103,10 @@ def user_login(request):
         if user is not None and user.is_active:
             login(request, user)
             messages.success(request, "You have successfully logged in!")
-            return redirect('home_page')
+            if not user.profile_updated:
+                return redirect('update_profile')
+            else:
+                return redirect('home_page')
         else:
             try:
                 user = User.objects.filter(email=username).first()
@@ -129,7 +135,12 @@ def update_profile(request):
         form = UserProfileForm(request.POST, request.FILES, instance=request.user)
         if form.is_valid():
             form.save()
-            return redirect('user_profile', user_id=request.user.id)
+            if not request.user.profile_updated:
+                request.user.profile_updated = True
+                request.user.save()
+                return redirect('home_page')
+            else:
+                return redirect('user_profile', user_id=request.user.id)
             # return render(request, 'user_profile.html', {'user_id': request.user.id})
     else:
         # profile_data = {'first_name': current_profile.first_name, 'last_name': current_profile.last_name, 'fun_fact': current_profile.fun_fact, 'short_bio': current_profile.short_bio}

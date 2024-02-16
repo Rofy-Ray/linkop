@@ -106,8 +106,8 @@ DATABASES = {
         'NAME': 'linkop',
         'USER': 'postgres',
         'PASSWORD': 'P067gr36',
-        'HOST': 'localhost',  # If your database is on a different host, update accordingly
-        'PORT': '5432',  # Default PostgreSQL port
+        'HOST': 'localhost',  
+        'PORT': '5432', 
     }
 }
 
@@ -190,12 +190,12 @@ BOOTSTRAP_DATEPICKER_PLUS = {
 MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST = os.getenv("SMTP_HOST")
 EMAIL_PORT = 587
-EMAIL_HOST_USER = 'plentywahala@gmail.com'
-EMAIL_HOST_PASSWORD = 'kxfvkeonovvzxsvm'
 EMAIL_USE_TLS = True
-DEFAULT_FROM_EMAIL = 'wossop@linkop.com'
+EMAIL_HOST_USER = os.getenv("SMTP_USERNAME")
+EMAIL_HOST_PASSWORD = os.getenv("SMTP_PASSWORD")
+
 
 
 MESSAGE_TAGS = {

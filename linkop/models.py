@@ -11,6 +11,7 @@ class CustomUser(AbstractUser):
     fun_fact = models.CharField(max_length=255)
     short_bio = models.CharField(max_length=500)
     interests = models.ManyToManyField('self', symmetrical=False, blank=True)
+    profile_updated = models.BooleanField(default=False)
     
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = ['first_name', 'last_name']
