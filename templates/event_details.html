@@ -112,9 +112,7 @@
     
     
     {% comment %} {% if is_event_host and event.interested_users.all|length > 0 %} {% endcomment %}
-    {% with host_condition=is_event_host and event.interested_users.all|length > 0 %}
-    {% with user_condition=has_toggled_interest and event.interested_users.all|length > 1 %}
-        {% if host_condition or user_condition %}
+    {% if is_event_host and event.interested_users.all|length > 0 %}
             <div class="card text-bg-light mb-3 border-success pb-5">
                 <div class="card-header">
                     <h4 class="card-title">
@@ -131,8 +129,24 @@
                     {% endfor %}                 
                 </div>
             </div>
-        {% endif %}
-    {% endwith %}
-    {% endwith %}
+    {% elif has_toggled_interest and event.interested_users.all|length > 1 %}
+            <div class="card text-bg-light mb-3 border-success pb-5">
+                <div class="card-header">
+                    <h4 class="card-title">
+                        Who Else is Going?
+                    </h4>
+                </div>
+                <div class="card-body">
+                    {% for user in event.interested_users.all %}
+                        {% if user != request.user %}
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item"><a href="{% url 'user_profile' user.id %}"><p class="card-text">{{ user.first_name }} {{ user.last_name }}</p></a></li>
+                        </ul>
+                        {% endif %}
+                    {% endfor %}                 
+                </div>
+            </div>
+    {% endif %}
+    
 
 {% endblock %}
