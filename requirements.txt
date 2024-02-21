@@ -4,7 +4,6 @@ cloudinary==1.38.0
 dj-database-url==2.1.0
 Django==5.0.2
 django-bootstrap5==23.4
-django-cleanup==8.1.0
 django-cloudinary-storage==0.3.0
 django-bootstrap-datepicker-plus==5.0.5
 gunicorn==21.2.0
