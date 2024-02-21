@@ -13,7 +13,7 @@
         <div>
             <div class="d-flex justify-content-center align-items-center h-100 pb-5">
                 <div class="pb-5 col-xl-10">
-                    <div class="card bg-image shadow-1-strong" style="border-radius: 1rem; background-image: url('{% static 'linkop/img/updimg.jpg' %}'), linear-gradient(rgba(0, 0, 0, 0.7),rgba(0, 0, 0, 0.7)); background-blend-mode: multiply;">
+                    <div class="card bg-image shadow-1-strong" style="border-radius: 1rem; background-image: url('{% static 'img/updimg.jpg' %}'), linear-gradient(rgba(0, 0, 0, 0.7),rgba(0, 0, 0, 0.7)); background-blend-mode: multiply;">
                         <div class="card-body p-4 p-lg-5 text-white">
                             <form method="post" enctype="multipart/form-data">
                                 {% csrf_token %}
@@ -68,7 +68,7 @@
                                     {% if form.instance.photo %}
                                         <img src="{{ form.instance.photo.url }}" alt="Current Photo" style="width: 50px; border-radius: 50%; object-fit: contain;">
                                     {% else %}
-                                        <img src="{% static 'linkop/img/avatar.jpeg' %}" alt="Current Photo" style="width: 50px; border-radius: 50%; object-fit: contain;">
+                                        <img src="{% static 'img/avatar.jpeg' %}" alt="Current Photo" style="width: 50px; border-radius: 50%; object-fit: contain;">
                                     {% endif %}
                                 </div>
                              

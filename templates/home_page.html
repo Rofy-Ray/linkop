@@ -12,7 +12,7 @@
         <div class="row">
         {% for event in upcoming_events %}
             <div class="col-xs-12 col-sm-4">
-                <div class="homecard" style="background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.2)), url('{% static 'linkop/img/evtbck.jpg' %}');">
+                <div class="homecard" style="background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.2)), url('{% static 'img/evtbck.jpg' %}');">
                 <div class="overlay"></div>
                 <div class="card-category">LinkopKonet</div>
                 <div class="card-description">
@@ -22,7 +22,7 @@
                 {% if event.host.photo %}
                     <img class="card-user avatar avatar-bordered" src="{{ event.host.photo.url }}">
                 {% else %}
-                    <!-- Display a default image or nothing -->
+                    <img class="card-user avatar avatar-bordered" src="{% static 'img/avatar.png' %}">
                 {% endif %}
                 <a class="card-link" href="{% url 'event_details' event_id=event.pk %}" ></a>
                 </div>

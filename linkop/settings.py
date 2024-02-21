@@ -36,6 +36,7 @@ SECRET_KEY = os.getenv('SECRET_KEY', os.getenv('DEFAULT_KEY'))
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = 'RENDER' not in os.environ
 # DEBUG = os.getenv('DEBUG', '0').lower() in ['true', 't', '1']
+# DEBUG = False
 
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '').split(' ')
 
@@ -48,18 +49,21 @@ if RENDER_EXTERNAL_HOSTNAME:
 # Application definition
 
 INSTALLED_APPS = [
+    'cloudinary_storage',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     # 'livesync',
-    'cloudinary_storage',
+    # 'cloudinary_storage',
     'django.contrib.staticfiles',
-    'cloudinary',
+    # 'cloudinary',
     'linkop',
     'django_bootstrap5',
     'bootstrap_datepicker_plus', 
+    'cloudinary',
+    # 'django_cleanup',
 ]
 
 MIDDLEWARE = [
@@ -155,14 +159,14 @@ USE_TZ = True
 
 # STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 
-STATIC_URL = '/staticfiles/'
-
-STATICFILES_STORAGE = 'cloudinary_storage.storage.StaticHashedCloudinaryStorage'
+STATIC_URL = '/static/'
 
 STATICFILES_DIRS = [
-    BASE_DIR / "staticfiles",
+    BASE_DIR / 'static',
     # '/var/www/static/',
 ]
+
+STATICFILES_STORAGE = 'cloudinary_storage.storage.StaticHashedCloudinaryStorage'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
