@@ -7,7 +7,7 @@ from .managers import CustomUserManager
 class CustomUser(AbstractUser):
     username = None
     email = models.EmailField(_("email address"), unique=True)
-    photo = models.ImageField(upload_to='mediafiles/user_photos/', blank=True, null=True)
+    photo = models.ImageField(upload_to='media/user_photos/', blank=True, null=True)
     fun_fact = models.CharField(max_length=255)
     short_bio = models.CharField(max_length=500)
     interests = models.ManyToManyField('self', symmetrical=False, blank=True)
