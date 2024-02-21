@@ -111,7 +111,9 @@
     {% endif %}
     
     
-    {% if (is_event_host and event.interested_users.all|length > 0) or (has_toggled_interest and event.interested_users.all|length > 1) %}
+    {% comment %} {% if is_event_host and event.interested_users.all|length > 0 %} {% endcomment %}
+    {% with show_section=is_event_host and event.interested_users.all|length > 0 or has_toggled_interest and event.interested_users.all|length > 1 %}
+    {% if show_section %}
             <div class="card text-bg-light mb-3 border-success pb-5">
                 <div class="card-header">
                     <h4 class="card-title">
@@ -129,5 +131,6 @@
                 </div>
             </div>
     {% endif %}
+    {% endwith %}
 
 {% endblock %}
