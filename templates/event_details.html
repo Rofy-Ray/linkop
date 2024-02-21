@@ -112,8 +112,9 @@
     
     
     {% comment %} {% if is_event_host and event.interested_users.all|length > 0 %} {% endcomment %}
-    {% with show_section=is_event_host and event.interested_users.all|length > 0 or has_toggled_interest and event.interested_users.all|length > 1 %}
-    {% if show_section %}
+    {% with host_condition=is_event_host and event.interested_users.all|length > 0 %}
+    {% with user_condition=has_toggled_interest and event.interested_users.all|length > 1 %}
+        {% if host_condition or user_condition %}
             <div class="card text-bg-light mb-3 border-success pb-5">
                 <div class="card-header">
                     <h4 class="card-title">
@@ -130,7 +131,8 @@
                     {% endfor %}                 
                 </div>
             </div>
-    {% endif %}
+        {% endif %}
+    {% endwith %}
     {% endwith %}
 
 {% endblock %}
