@@ -8,7 +8,7 @@ Event Attendees
     <h1>Event Attendees for {{ event.title }}</h1>
     <ul>
         {% for attendee in attendees %}
-            <li><a href="{% url 'profile' attendee.pk %}">{{ attendee.name }}</a></li>
+            <li><a href="{% url 'profile' attendee.pk %}">{{ attendee.first_name }} {{ attendee.last_name }}</a></li>
         {% endfor %}
     </ul>
 {% endblock %}

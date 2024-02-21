@@ -19,7 +19,7 @@
                 <p class="card-text"><b>When?</b> {{ event.date }}</p>
                 <p class="card-text"><b>Time?</b> {{ event.time }}</p>
                 <p class="card-text"><b>Where?</b> {{ event.location }}</p>
-                <p class="card-text"><b>Host?</b> {% if request.user.name == event.host.name %} Me {% else %} <a href="{% url 'user_profile' event.host.id %}">{{ event.host.name }}</a> {% endif %}</p>
+                <p class="card-text"><b>Host?</b> {% if request.user.first_name == event.host.first_name and request.user.last_name == event.host.last_name %} Me {% else %} <a href="{% url 'user_profile' event.host.id %}">{{ event.host.first_name }} {{ event.host.last_name }}</a> {% endif %}</p>
             
                 {% if not is_event_host and not event.is_past_event %}
                     {% if request.user in event.interested_users.all %}
@@ -55,7 +55,7 @@
               <p class="card-text"><b>Reviews: </b></p>
               <ul class="list-group list-group-flush">
                 {% for review in reviews %}
-                    <li class="list-group-item"><p class="card-text">{{ review.reviewer.name }} <br> - Rating: {{ review.rating }} <br> - Comment: {{ review.comment }}</p></li>
+                    <li class="list-group-item"><p class="card-text">{{ review.reviewer.first_name }} {{ review.reviewer.last_name }}<br> - Rating: {{ review.rating }} <br> - Comment: {{ review.comment }}</p></li>
                 {% endfor %}
               </ul>
 
@@ -107,9 +107,11 @@
             </div>
         </div>
         {% endif %}
+
+    {% endif %}
     
     
-        {% elif has_toggled_interest and event.interested_users.all|length > 1 %}
+        {% if has_toggled_interest and event.interested_users.all|length > 1 %}
             <div class="card text-bg-light mb-3 border-success pb-5">
                 <div class="card-header">
                     <h4 class="card-title">
@@ -120,12 +122,12 @@
                     {% for user in event.interested_users.all %}
                         {% if user != request.user %}
                         <ul class="list-group list-group-flush">
-                            <li class="list-group-item"><a href="{% url 'user_profile' user.id %}"><p class="card-text">{{ user.name }}</p></a></li>
+                            <li class="list-group-item"><a href="{% url 'user_profile' user.id %}"><p class="card-text">{{ user.first_name }} {{ user.last_name }}</p></a></li>
                         </ul>
                         {% endif %}
                     {% endfor %}                 
                 </div>
             </div>
-    {% endif %}
+        {% endif %}
 
 {% endblock %}

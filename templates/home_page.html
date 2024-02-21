@@ -19,7 +19,7 @@
                     <h3>{{ event.title }}</h3>
                     <p>{{ event.description }}</p>
                 </div>
-                <img class="card-user avatar avatar-bordered" src="{{ event.host.photo }}">
+                <img class="card-user avatar avatar-bordered" src="{{ event.host.photo.url }}">
                 <a class="card-link" href="{% url 'event_details' event_id=event.pk %}" ></a>
                 </div>
             </div>
