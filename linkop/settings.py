@@ -217,7 +217,7 @@ CLOUDINARY_STORAGE = {
     'API_SECRET': os.getenv("CLOUDINARY_API_SECRET")
 }
 
-MEDIA_URL = '/mediafiles/' 
+MEDIA_URL = '/media/' 
 
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
