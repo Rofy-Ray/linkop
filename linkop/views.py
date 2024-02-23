@@ -37,7 +37,7 @@ def register(request):
             user.save()
             
             welcome_subject = "What brought you here?"
-            welcome_message = f"Hey there!\n\nI'm really glad you've decided to try Linkop! I'm Rofy, one of the co-founders.\n\nI'm curious: what's happening in your world that brought you to Linkop?\n\n(We're a small startup, and it's always helpful to hear why people signed up).\n\nAlso, how did you hear about us?\n\nThanks,\nRofy Ray\nCo-Founder, Linkop"
+            welcome_message = f"Hey there!\n\nWe're really glad you've decided to try Linkop! We're Rofy and Kelvin, the founders.\n\nWe're curious: what's happening in your world that brought you to Linkop?\n\n(We're a small startup, and it's always helpful to hear why people signed up).\n\nAlso, how did you hear about us?\n\nThanks,\nRofy & Kelvin\nThe Founders, Linkop"
             from_email = settings.EMAIL_HOST_USER
             to_list = [user.email]
             send_mail(welcome_subject, welcome_message, from_email, to_list, fail_silently=False)
@@ -184,6 +184,22 @@ def create_event(request):
         form = EventForm()
     return render(request, 'create_event.html', {'form': form})
 
+@login_required
+def update_event(request, event_id):
+    event = get_object_or_404(Event, pk=event_id)
+    if request.user != event.host:
+        return HttpResponseForbidden()
+    if request.method == 'POST':
+        form = EventForm(request.POST, instance=event)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Event updated successfully.')
+            return redirect('event_details', event_id=event.id)
+    else:
+        form = EventForm(instance=event)
+    return render(request, "create_event.html", {"form": form, "event": event})
+
+
 def event_details(request, event_id):
     event = get_object_or_404(Event, pk=event_id)
     is_event_host = event.is_host(request.user)
@@ -245,6 +261,16 @@ def event_attendees(request, event_id):
     event = get_object_or_404(Event, pk=event_id)
     attendees = event.interested_users.all()
     return render(request, 'event_attendees.html', {'event': event, 'attendees': attendees})
+
+@login_required
+def delete_event(request, event_id):
+    event = get_object_or_404(Event, pk=event_id)
+    if request.user != event.host:
+        return HttpResponseForbidden()
+    if request.method == 'POST':
+        event.delete()
+        messages.success(request, 'Event deleted successfully.')
+        return redirect('home_page')
 
 @login_required
 def pick_interest(request, user_id):

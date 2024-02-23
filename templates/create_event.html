@@ -18,38 +18,42 @@
                             {% csrf_token %}
                             <div class="d-flex align-items-center mb-3 pb-1">
                             <i class="bi bi-plus-circle-fill fs-1"></i>
-                            <span class="h1 fw-bold mb-0">Create Event</span>
+                            <span class="h1 fw-bold mb-0">{% if event and event.pk %}Update{% else %}Create{% endif %} Event</span>
                             </div>
         
                             <h5 class="fw-normal mb-3 pb-3" style="letter-spacing: 1px;">Put together an experience</h5>
         
                             <div class="form-outline mb-4">
-                            <input type="text" id="title" name="title" class="form-control form-control-lg" />
+                            <input type="text" id="title" name="title" class="form-control form-control-lg" value="{{ form.title.value|default:'' }}" />
                             <label class="form-label" for="title">Title</label>
                             </div>
         
                             <div class="form-outline mb-4">
-                            <textarea id="description" name="description" class="form-control form-control-lg" ></textarea>
+                            <textarea id="description" name="description" class="form-control form-control-lg" >{{ form.description.value|default:'' }}</textarea>
                             <label class="form-label" for="description">Description</label>
                             </div>
 
                             <div class="form-outline mb-4">
-                                <input type="date" id="date" name="date" class="form-control form-control-lg" />
+                                <input type="date" id="date" name="date" class="form-control form-control-lg" value="{{ form.date.value|date:'Y-m-d'|default:'' }}" />
+                                {% comment %} {{ form.date }} {% endcomment %}
                                 <label class="form-label" for="date">Date</label>
                             </div>
 
                             <div class="form-outline mb-4">
-                                <input type="time" id="time" name="time" class="form-control form-control-lg" />
+                                <input type="time" id="time" name="time" class="form-control form-control-lg" value="{{ form.time.value|time:'H:i'|default:'' }}" />
+                                {% comment %} {{ form.time }} {% endcomment %}
                                 <label class="form-label" for="time">Time</label>
                             </div>
 
                             <div class="form-outline mb-4">
-                                <input type="text" id="location" name="location" class="form-control form-control-lg" />
+                                <input type="text" id="location" name="location" class="form-control form-control-lg" value="{{ form.location.value|default:'' }}" />
                                 <label class="form-label" for="location">Location</label>
                             </div>
     
                             <div class="pt-1 mb-4">
-                            <button class="btn btn-light btn-lg btn-block btn-outline-success" type="submit">Add Event</button>
+                            <button class="btn btn-light btn-lg btn-block btn-outline-success" type="submit">
+                                {% if event and event.pk %}Update Event{% else %}Add Event{% endif %}
+                            </button>
                             </div>
                         </form>
                     </div>

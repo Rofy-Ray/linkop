@@ -19,8 +19,8 @@ class EventForm(forms.ModelForm):
         model = Event
         fields = ['title', 'description', 'date', 'time', 'location']
         widgets = {
-            'date': DatePickerInput(),
-            'time': TimePickerInput(),
+            'date': DatePickerInput(format='%m/%d/%Y'),
+            'time': TimePickerInput(format='%H:%M'),
         }
         
 class CustomUserCreationForm(UserCreationForm):

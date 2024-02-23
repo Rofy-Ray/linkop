@@ -18,9 +18,15 @@ h6 {
     padding: 0 !important;
 }
 
+.alert {
+    font-size: 1rem !important; 
+}
+
 .avatar {
+    height: 30px;
     width: 30px;
     border-radius: 50%;
+    object-fit: cover;
 }
 
 .avatar-bordered {
@@ -115,6 +121,14 @@ a:link {
     top: 50%;
     right: 1rem;
     font-size: 0.75rem;
+}
+
+.whatsapp-icon {
+    color: green; 
+}
+
+.delete-event-icon {
+    color: red;
 }
 
 @media (max-width: 600px) {

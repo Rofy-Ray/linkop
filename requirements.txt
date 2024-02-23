@@ -4,8 +4,9 @@ cloudinary==1.38.0
 dj-database-url==2.1.0
 Django==5.0.2
 django-bootstrap5==23.4
-django-cloudinary-storage==0.3.0
 django-bootstrap-datepicker-plus==5.0.5
+django-cloudinary-storage==0.3.0
+django-social-share==2.3.0
 gunicorn==21.2.0
 pillow==10.2.0
 psycopg==3.1.18
