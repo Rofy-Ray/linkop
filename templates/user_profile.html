@@ -18,7 +18,7 @@
                         alt="User Avatar" class="img-fluid my-5" style="width: 100px; border-radius: 50%; object-fit: contain;" />
                     {% else %}
                         <img src="{% static 'img/avatar.png' %}"
-                    alt="User Avatar" class="img-fluid my-5" style="width: 75px; height: 75px; border-radius: 50%; object-fit: cover;" />
+                    alt="User Avatar" class="img-fluid my-5" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover;" />
                     {% endif %}
                     <h4>{{ user.first_name }} {{ user.last_name }}</h4>
                     <p>{{ user.fun_fact }}</p>
