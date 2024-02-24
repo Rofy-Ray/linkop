@@ -8,7 +8,7 @@
     {% load social_share %}
     <h1 class="text-center" id="event-details-top">Event Details</h1>
 
-    <div class="card text-bg-light mb-3 border-info">
+    <div class="card text-bg-light border-info mb-3">
         <div class="card-header">
             <div class="d-flex justify-content-between align-items-center">
                 <h2 class="card-title">
@@ -85,7 +85,7 @@
 
     {% if event.is_past_event %}
         {% if reviews or user_review %}
-        <div class="card text-bg-light mb-3 border-dark pb-15">
+        <div class="card text-bg-light border-dark mb-3">
             <div class="card-header">
                 <h4 class="card-title">
                     Ratings and Reviews
@@ -111,7 +111,7 @@
 
         {% if request.user != event.host and not user_review %}
         <div class="pb-5">
-            <div class="card text-bg-light border-secondary mb-3 pb-5">
+            <div class="card text-bg-light border-secondary mb-3">
                 <div class="card-header">
                     <h4 class="card-title">
                         Rate and Comment on Event
@@ -153,7 +153,7 @@
     
     
     {% if is_event_host and event.interested_users.all|length > 0 %}
-            <div class="card text-bg-light mb-3 border-success pb-5">
+            <div class="card text-bg-light border-success mb-3">
                 <div class="card-header">
                     <h4 class="card-title">
                         Who Else is Going?
@@ -170,7 +170,7 @@
                 </div>
             </div>
     {% elif has_toggled_interest and event.interested_users.all|length > 1 %}
-            <div class="card text-bg-light mb-3 border-success pb-5">
+            <div class="card text-bg-light border-success mb-3">
                 <div class="card-header">
                     <h4 class="card-title">
                         Who Else is Going?
