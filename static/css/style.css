@@ -141,16 +141,18 @@ a:link {
 
 @media screen and (orientation: landscape) {
     .card {
-        /* min-height: 100vh; */
         max-height: 100vh; 
         overflow: auto; 
     }
-    .card img, .card .card-body {
-        max-height: 100vh; 
+    .card img {
+        max-height: 100%;
         object-fit: cover; 
-        /* overflow: hidden;  */
+    }
+    .card .card-body {
+        overflow: hidden; 
     }
 }
+
 
 
 
