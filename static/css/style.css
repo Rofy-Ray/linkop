@@ -141,14 +141,14 @@ a:link {
 
 @media screen and (orientation: landscape) {
     .card {
-        min-height: 50vh; /* Adjust this value as needed */
-        max-height: 100vh; /* Adjust this value as needed */
-        overflow: auto; /* Add a scrollbar if the content exceeds the max height */
+        min-height: 100vh;
+        /* max-height: 100vh;  */
+        overflow: auto; 
     }
     .card img, .card .card-body {
-        max-height: 100vh; /* Adjust this value as needed */
-        object-fit: cover; /* This will prevent the image from stretching */
-        overflow: hidden; /* This will prevent scrolling */
+        min-height: 100vh; 
+        object-fit: cover; 
+        overflow: hidden; 
     }
 }
 
