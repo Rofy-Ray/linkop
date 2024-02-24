@@ -146,7 +146,7 @@ a:link {
         overflow: auto; /* Add a scrollbar if the content exceeds the max height */
     }
     .card img, .card .card-body {
-        max-height: calc(100vh - 40px); /* Adjust this value as needed */
+        max-height: 100%; /* Adjust this value as needed */
         object-fit: cover; /* This will prevent the image from stretching */
         overflow: hidden; /* This will prevent scrolling */
     }
