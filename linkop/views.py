@@ -244,6 +244,10 @@ def set_event_status(sender, instance, **kwargs):
 def home_page(request):
     # Filter events that have a date greater than or equal to today's date
     upcoming_events = Event.objects.filter(date__gte=timezone.now().date()).order_by('date', 'time')
+    for event in upcoming_events:
+        if len(event.description) > 100:
+            event.description = event.description[:125] + '...'
+
     return render(request, 'home_page.html', {'upcoming_events': upcoming_events})
 
 @login_required
