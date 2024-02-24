@@ -147,7 +147,7 @@ a:link {
     .card img {
         max-height: 100%;
         width: auto;
-        /* object-fit: cover;  */
+        object-fit: cover; 
     }
     .card .card-body {
         overflow: hidden; 
