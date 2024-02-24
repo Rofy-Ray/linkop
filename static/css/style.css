@@ -144,10 +144,12 @@ a:link {
         max-height: 100%; 
         overflow: auto; 
     }
-    .card img {
-        max-height: 100%;
+    .card .card-img {
+        /* max-height: 100%;
         width: auto;
-        object-fit: cover; 
+        object-fit: cover;  */
+        background-size: cover;
+        background-position: center;
     }
     .card .card-body {
         overflow: hidden; 
