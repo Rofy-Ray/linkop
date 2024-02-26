@@ -141,8 +141,8 @@ a:link {
 
 @media screen and (orientation: landscape) {
     .card {
-        max-height: 100vh; 
-        overflow: auto; 
+        max-height: 100%; 
+        overflow: hidden; 
     }
     .card img {
         height: 100%;
