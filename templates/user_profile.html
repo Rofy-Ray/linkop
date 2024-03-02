@@ -1,5 +1,7 @@
 {% extends 'base.html' %}
 
+{% load url_encrypt %}
+
 {% block title %}
     User Profile
 {% endblock %}
@@ -31,7 +33,7 @@
                     {% endif %}
 
                     {% if not is_event_host and request.user != user %}
-                        <form action="{% url 'pick_interest' user_id=user.pk %}" method="post">
+                        <form action="{% url 'pick_interest' encrypted_user_id=user.pk|encrypt_id %}" method="post">
                             {% csrf_token %}
                             {% if user in request.user.interests.all %}
                                 <button type="submit" name="toggle_interest" value="unpick" class="btn btn-warning btn-outline-dark mb-1">Unpick Interest</button>
@@ -59,7 +61,7 @@
                             <div class="row pt-1">
                             <div class="col-12 mb-3">
                                 {% for event in past_events %}
-                                    <a href="{% url 'event_details' event_id=event.pk %}"><h6>{{ event.title }}</h6></a>
+                                    <a href="{% url 'event_details' encrypted_event_id=event.pk|encrypt_id %}"><h6>{{ event.title }}</h6></a>
                                 {% endfor %}
                             </div>
                             </div>
@@ -94,7 +96,7 @@
                             {% for notification in notifications %}
                             <li class="list-group-item">
                                 {{ notification.content }}
-                                <a href="{% url 'mark_notification_as_read' user_id=request.user.id notification_id=notification.id %}" class="float-end">
+                                <a href="{% url 'mark_notification_as_read' encrypted_user_id=request.user.id|encrypt_id  encrypted_notification_id=notification.id|encrypt_id %}" class="float-end">
                                     <button type="submit">
                                         <p class="card-text">
                                             <i class="bi bi-envelope-paper-fill"></i>
@@ -103,7 +105,7 @@
                                 </a>
                                 {% with sender=notification.sender %}
                                     {% if sender in senders_with_interest %}
-                                        <form action="{% url 'pick_interest' user_id=sender.id %}" method="post">
+                                        <form action="{% url 'pick_interest' encrypted_user_id=sender.id|encrypt_id %}" method="post">
                                             {% csrf_token %}
                                             <button type="submit" class="card-text rounded">Return Interest</button>
                                         </form>
@@ -138,7 +140,7 @@
                         <div class="row pt-1">
                         <div class="col-12 mb-3">
                             <h6>Say Something</h6>
-                            <form action="{% url 'send_message' receiver_id=user.pk %}" method="post">
+                            <form action="{% url 'send_message' encrypted_receiver_id=user.pk|encrypt_id %}" method="post">
                                 {% csrf_token %}
                                 <div class="form-outline mb-1">
                                     <textarea name="content" placeholder="Type your message here" class="form-control"></textarea>

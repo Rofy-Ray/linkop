@@ -11,6 +11,7 @@
     <link rel="icon" type="image/png" sizes="192x192" href="{% static 'img/ico/android-chrome-192x192.png' %}">
     <link rel="icon" type="image/png" sizes="512x512" href="{% static 'img/ico/android-chrome-512x512.png' %}">
     <link rel="manifest" href="{% static 'img/ico/site.webmanifest' %}">
+    {% load url_encrypt %}
     {% load django_bootstrap5 %}
     {% bootstrap_css %}
     {% bootstrap_javascript %}
@@ -48,9 +49,9 @@
                         <!-- Show Profile and Create Event links when user is logged in -->
                         <li class="nav-item">
                             {% if is_own_profile %}
-                                <a class="nav-link" href="{% url 'user_profile' user.id %}">Profile</a>
+                                <a class="nav-link" href="{% url 'user_profile' user.id|encrypt_id %}">Profile</a>
                             {% else %}
-                                <a class="nav-link" href="{% url 'user_profile' request.user.id %}">Profile</a>
+                                <a class="nav-link" href="{% url 'user_profile' request.user.id|encrypt_id %}">Profile</a>
                             {% endif %}
                         </li>
                         <li class="nav-item">

@@ -21,7 +21,7 @@
                     <div class="col-12 mb-3">
                         <ul class="list-group">
                             {% for sender in senders %}
-                                <a href="{% url 'message_history' sender_id=sender.pk %}">
+                                <a href="{% url 'message_history' encrypted_sender_id=sender.pk|encrypt_id %}">
                                     <li class="list-group-item d-flex justify-content-between align-items-center mb-1">
                                         <strong>{{ sender.first_name }} {{ sender.last_name }}</strong>
                                         <span class="badge bg-primary rounded-pill"><i class="bi bi-envelope-fill"></i></span>

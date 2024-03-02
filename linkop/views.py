@@ -18,7 +18,6 @@ from django.contrib.auth.tokens import default_token_generator
 from django.conf import settings
 from django.contrib.auth import views as auth_views
 
-
 User = get_user_model()
 
 class CustomPasswordResetConfirmView(auth_views.PasswordResetConfirmView):
@@ -148,7 +147,8 @@ def update_profile(request):
     return render(request, 'update_profile.html', {'form': form})
 
 @login_required
-def user_profile(request, user_id=None):
+def user_profile(request, encrypted_user_id=None):
+    user_id = force_str(urlsafe_base64_decode(encrypted_user_id))
     user = get_object_or_404(User, id=user_id)
     past_events = Event.objects.filter(host=user, is_past_event=True)
     # upcoming_events = Event.objects.filter(host=user, is_past_event=False)
@@ -185,7 +185,8 @@ def create_event(request):
     return render(request, 'create_event.html', {'form': form})
 
 @login_required
-def update_event(request, event_id):
+def update_event(request, encrypted_event_id):
+    event_id = force_str(urlsafe_base64_decode(encrypted_event_id))
     event = get_object_or_404(Event, pk=event_id)
     if request.user != event.host:
         return HttpResponseForbidden()
@@ -200,7 +201,8 @@ def update_event(request, event_id):
     return render(request, "create_event.html", {"form": form, "event": event})
 
 
-def event_details(request, event_id):
+def event_details(request, encrypted_event_id):
+    event_id = force_str(urlsafe_base64_decode(encrypted_event_id))
     event = get_object_or_404(Event, pk=event_id)
     is_event_host = event.is_host(request.user)
     has_toggled_interest = request.user in event.interested_users.all()
@@ -251,9 +253,9 @@ def home_page(request):
     return render(request, 'home_page.html', {'upcoming_events': upcoming_events})
 
 @login_required
-def toggle_interest(request, event_id):
+def toggle_interest(request, encrypted_event_id):
+    event_id = force_str(urlsafe_base64_decode(encrypted_event_id))
     event = get_object_or_404(Event, pk=event_id)
-    
     if request.user in event.interested_users.all():
         event.interested_users.remove(request.user)
     else:
@@ -261,13 +263,15 @@ def toggle_interest(request, event_id):
         
     return redirect('event_details', event_id=event.id) 
 
-def event_attendees(request, event_id):
+def event_attendees(request, encrypted_event_id):
+    event_id = force_str(urlsafe_base64_decode(encrypted_event_id))
     event = get_object_or_404(Event, pk=event_id)
     attendees = event.interested_users.all()
     return render(request, 'event_attendees.html', {'event': event, 'attendees': attendees})
 
 @login_required
-def delete_event(request, event_id):
+def delete_event(request, encrypted_event_id):
+    event_id = force_str(urlsafe_base64_decode(encrypted_event_id))
     event = get_object_or_404(Event, pk=event_id)
     if request.user != event.host:
         return HttpResponseForbidden()
@@ -277,7 +281,8 @@ def delete_event(request, event_id):
         return redirect('home_page')
 
 @login_required
-def pick_interest(request, user_id):
+def pick_interest(request, encrypted_user_id):
+    user_id = force_str(urlsafe_base64_decode(encrypted_user_id))
     other_user = get_object_or_404(User, pk=user_id)
 
     if request.user == other_user:
@@ -303,7 +308,8 @@ def pick_interest(request, user_id):
     return redirect('user_profile', user_id=user_id)
 
 @login_required
-def mark_notification_as_read(request, user_id, notification_id):
+def mark_notification_as_read(request, encrypted_user_id, encrypted_notification_id):
+    notification_id = force_str(urlsafe_base64_decode(encrypted_notification_id))
     notification = get_object_or_404(Notification, pk=notification_id, user=request.user)
     if notification.user == request.user:
         notification.is_read = True
@@ -311,7 +317,8 @@ def mark_notification_as_read(request, user_id, notification_id):
     return redirect('user_profile', user_id=request.user.id)
 
 @login_required
-def send_message(request, receiver_id):
+def send_message(request, encrypted_receiver_id):
+    receiver_id = force_str(urlsafe_base64_decode(encrypted_receiver_id))
     receiver = get_object_or_404(User, pk=receiver_id)
 
     if request.method == 'POST':
@@ -323,7 +330,8 @@ def send_message(request, receiver_id):
     return redirect('user_profile', user_id=receiver_id)
 
 @login_required
-def reply_to_message(request, sender_id):
+def reply_to_message(request, encrypted_sender_id):
+    sender_id = force_str(urlsafe_base64_decode(encrypted_sender_id))
     sender = get_object_or_404(User, pk=sender_id)
 
     if request.method == 'POST':
@@ -342,7 +350,8 @@ def message_inbox(request):
     return render(request, 'message_inbox.html', {'senders': senders})
 
 @login_required
-def message_history(request, sender_id):
+def message_history(request, encrypted_sender_id):
+    sender_id = force_str(urlsafe_base64_decode(encrypted_sender_id))
     sender = get_object_or_404(User, pk=sender_id)
     
     # Get messages between the logged-in user and the sender
@@ -354,7 +363,8 @@ def message_history(request, sender_id):
 
 
 @login_required
-def rate_and_review_event(request, event_id):
+def rate_and_review_event(request, encrypted_event_id):
+    event_id = force_str(urlsafe_base64_decode(encrypted_event_id))
     event = get_object_or_404(Event, pk=event_id)
 
     if request.method == 'POST':

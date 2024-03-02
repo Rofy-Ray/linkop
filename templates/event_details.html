@@ -1,5 +1,7 @@
 {% extends 'base.html' %}
 
+{% load url_encrypt %}
+
 {% block title %}
     Linkop Experience
 {% endblock %}
@@ -17,7 +19,7 @@
                 {% if is_event_host %}
                 <div class="d-flex">
                     <i class="bi bi-trash3-fill fs-5 delete-event-icon me-3" data-bs-toggle="modal" data-bs-target="#deleteModal"></i>
-                    <a href="{% url 'update_event' event_id=event.pk %}"><i class="bi bi-pencil-fill fs-5 me-1"></i></a>
+                    <a href="{% url 'update_event' encrypted_event_id=event.pk|encrypt_id %}"><i class="bi bi-pencil-fill fs-5 me-1"></i></a>
                 </div>
 
                 <!-- Delete Confirmation Modal -->
@@ -33,7 +35,7 @@
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                                <form action="{% url 'delete_event' event_id=event.pk %}" method="post">
+                                <form action="{% url 'delete_event' encrypted_event_id=event.pk|encrypt_id %}" method="post">
                                     {% csrf_token %}
                                     <button type="submit" class="btn btn-danger">Yes, delete!</button>
                                 </form>
@@ -50,16 +52,16 @@
                 <p class="card-text"><b>When?</b> {{ event.date }}</p>
                 <p class="card-text"><b>Time?</b> {{ event.time }}</p>
                 <p class="card-text"><b>Where?</b> {{ event.location }}</p>
-                <p class="card-text"><b>Host?</b> {% if request.user.first_name == event.host.first_name and request.user.last_name == event.host.last_name %} Me {% else %} <a href="{% url 'user_profile' event.host.id %}">{{ event.host.first_name }} {{ event.host.last_name }}</a> {% endif %}</p>
+                <p class="card-text"><b>Host?</b> {% if request.user.first_name == event.host.first_name and request.user.last_name == event.host.last_name %} Me {% else %} <a href="{% url 'user_profile' event.host.id|encrypt_id %}">{{ event.host.first_name }} {{ event.host.last_name }}</a> {% endif %}</p>
             
                 {% if not is_event_host and not event.is_past_event %}
                     {% if request.user in event.interested_users.all %}
-                        <form action="{% url 'toggle_interest' event_id=event.pk %}" method="post">
+                        <form action="{% url 'toggle_interest' encrypted_event_id=event.pk|encrypt_id %}" method="post">
                             {% csrf_token %}
                             <span><b>RSVP?</b> </span><button type="submit" class="btn btn-success">Going</button>
                         </form>
                     {% else %}
-                        <form action="{% url 'toggle_interest' event_id=event.pk %}" method="post">
+                        <form action="{% url 'toggle_interest' encrypted_event_id=event.pk|encrypt_id %}" method="post">
                             {% csrf_token %}
                             <span><b>RSVP?</b> </span><button type="submit" class="btn btn-warning">Not Going</button>
                         </form>
@@ -118,7 +120,7 @@
                     </h4>
                 </div>
                 <div class="card-body">
-                    <form action="{% url 'event_details' event_id=event.pk %}" method="post">
+                    <form action="{% url 'event_details' encrypted_event_id=event.pk|encrypt_id %}" method="post">
                         {% csrf_token %}
                             <div class="form-outline mb-1">
                                 <select name="rating" id="rating" class="form-control">

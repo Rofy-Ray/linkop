@@ -1,5 +1,7 @@
 {% extends 'base.html' %}
 
+{% load url_encrypt %}
+
 {% block title %}
     Linkop App | Welcome
 {% endblock %}
@@ -24,7 +26,7 @@
                     {% else %}
                         <img class="card-user avatar avatar-bordered" src="{% static 'img/avatar.png' %}">
                     {% endif %}
-                <a class="card-link" href="{% url 'event_details' event_id=event.pk %}" ></a>
+                <a class="card-link" href="{% url 'event_details' encrypted_event_id=event.pk|encrypt_id %}" ></a>
                 </div>
             </div>
         {% endfor %}
