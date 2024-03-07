@@ -178,6 +178,8 @@ def user_profile(request, encrypted_user_id=None):
 
 @login_required
 def create_event(request):
+    if request.user.is_authenticated and not (request.user.first_name and request.user.last_name and request.user.fun_fact and request.user.short_bio and request.user.photo):
+        return redirect('update_profile')
     if request.method == 'POST':
         form = EventForm(request.POST)
         if form.is_valid():
