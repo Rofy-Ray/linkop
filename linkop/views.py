@@ -17,6 +17,7 @@ from django.utils.encoding import force_bytes, force_str
 from django.contrib.auth.tokens import default_token_generator
 from django.conf import settings
 from django.contrib.auth import views as auth_views
+from linkop.templatetags.url_encrypt import encrypt_id
 
 User = get_user_model()
 
@@ -57,7 +58,7 @@ def register(request):
             })
             send_mail(activation_subject, '', from_email, to_list, fail_silently=False, html_message=activation_message)
 
-            messages.success(request, "Your account has been created successfully! Please check your email to confirm your email address and activate your account.")
+            messages.success(request, "Your account has been created successfully! Please check your email to confirm your email address and activate your account. It might be in your spam folder.")
             
             return redirect('login')
         else:
@@ -139,7 +140,8 @@ def update_profile(request):
                 request.user.save()
                 return redirect('home_page')
             else:
-                return redirect('user_profile', user_id=request.user.id)
+                encrypted_user_id = encrypt_id(request.user.id)
+                return redirect('user_profile', encrypted_user_id=encrypted_user_id)
             # return render(request, 'user_profile.html', {'user_id': request.user.id})
     else:
         # profile_data = {'first_name': current_profile.first_name, 'last_name': current_profile.last_name, 'fun_fact': current_profile.fun_fact, 'short_bio': current_profile.short_bio}
@@ -161,6 +163,9 @@ def user_profile(request, encrypted_user_id=None):
         has_mutual_interest = None
         can_message_each_other = False
         is_own_profile = True
+        
+        if not (user.first_name and user.last_name and user.fun_fact and user.short_bio and user.photo):
+            return redirect('update_profile') 
     else:
         notifications = None
         senders_with_interest = None
@@ -179,7 +184,8 @@ def create_event(request):
             event = form.save(commit=False)
             event.host = request.user
             event.save()
-            return redirect('event_details', event_id=event.id) 
+            encrypted_event_id = encrypt_id(event.id)
+            return redirect('event_details', encrypted_event_id=encrypted_event_id) 
     else:
         form = EventForm()
     return render(request, 'create_event.html', {'form': form})
@@ -195,7 +201,8 @@ def update_event(request, encrypted_event_id):
         if form.is_valid():
             form.save()
             messages.success(request, 'Event updated successfully.')
-            return redirect('event_details', event_id=event.id)
+            encrypted_event_id = encrypt_id(event.id)
+            return redirect('event_details', encrypted_event_id=encrypted_event_id)
     else:
         form = EventForm(instance=event)
     return render(request, "create_event.html", {"form": form, "event": event})
@@ -244,6 +251,8 @@ def set_event_status(sender, instance, **kwargs):
         instance.is_past_event = False
 
 def home_page(request):
+    if request.user.is_authenticated and not (request.user.first_name and request.user.last_name and request.user.fun_fact and request.user.short_bio and request.user.photo):
+        return redirect('update_profile')
     # Filter events that have a date greater than or equal to today's date
     upcoming_events = Event.objects.filter(date__gte=timezone.now().date()).order_by('date', 'time')
     for event in upcoming_events:
@@ -261,7 +270,7 @@ def toggle_interest(request, encrypted_event_id):
     else:
         event.interested_users.add(request.user)
         
-    return redirect('event_details', event_id=event.id) 
+    return redirect('event_details', encrypted_event_id=encrypted_event_id) 
 
 def event_attendees(request, encrypted_event_id):
     event_id = force_str(urlsafe_base64_decode(encrypted_event_id))
@@ -287,7 +296,7 @@ def pick_interest(request, encrypted_user_id):
 
     if request.user == other_user:
         # A user cannot pick interest in themselves
-        return redirect('user_profile', user_id=user_id)
+        return redirect('user_profile', encrypted_user_id=encrypted_user_id)
     
     if request.method == 'POST':
         toggle_action = request.POST.get('toggle_interest')
@@ -295,17 +304,17 @@ def pick_interest(request, encrypted_user_id):
             request.user.interests.remove(other_user)
         elif toggle_action == 'pick':
             request.user.interests.add(other_user)
-            Notification.objects.create(user=other_user, content=f"{request.user.name} has shown interest in you.", sender=request.user)
-            messages.success(request, f"You have shown interest in {other_user.name}.")
+            Notification.objects.create(user=other_user, content=f"{request.user.first_name} {request.user.last_name} has shown interest in you.", sender=request.user)
+            messages.success(request, f"You have shown interest in {other_user.first_name} {other_user.last_name}.")
             
             # Check if the receiver is the current user, and if so, display the notification
             if other_user == request.user:
                 notifications = Notification.objects.filter(user=other_user, is_read=False)
                 return render(request, 'user_profile.html', {'user': other_user, 'notifications': notifications})
 
-        return redirect('user_profile', user_id=user_id)
+        return redirect('user_profile', encrypted_user_id=encrypted_user_id)
 
-    return redirect('user_profile', user_id=user_id)
+    return redirect('user_profile', encrypted_user_id=encrypted_user_id)
 
 @login_required
 def mark_notification_as_read(request, encrypted_user_id, encrypted_notification_id):
@@ -314,7 +323,8 @@ def mark_notification_as_read(request, encrypted_user_id, encrypted_notification
     if notification.user == request.user:
         notification.is_read = True
         notification.save()
-    return redirect('user_profile', user_id=request.user.id)
+        encrypted_user_id = encrypt_id(request.user.id)
+    return redirect('user_profile', encrypted_user_id=encrypted_user_id)
 
 @login_required
 def send_message(request, encrypted_receiver_id):
@@ -327,7 +337,7 @@ def send_message(request, encrypted_receiver_id):
             message = Message(sender=request.user, receiver=receiver, content=content)
             message.save()
 
-    return redirect('user_profile', user_id=receiver_id)
+    return redirect('user_profile', encrypted_user_id=encrypted_receiver_id)
 
 @login_required
 def reply_to_message(request, encrypted_sender_id):
@@ -340,7 +350,7 @@ def reply_to_message(request, encrypted_sender_id):
             message = Message(sender=request.user, receiver=sender, content=content)
             message.save()
 
-    return redirect('message_history', sender_id=sender_id)
+    return redirect('message_history', encrypted_sender_id=encrypted_sender_id)
 
 @login_required
 def message_inbox(request):
@@ -375,4 +385,4 @@ def rate_and_review_event(request, encrypted_event_id):
             review = EventReview(event=event, reviewer=request.user, rating=rating, comment=comment)
             review.save()
 
-    return redirect('event_details', event_id=event_id)
+    return redirect('event_details', encrypted_event_id=encrypted_event_id)

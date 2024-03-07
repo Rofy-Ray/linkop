@@ -8,6 +8,7 @@
 
 {% block content %}
     <div class="vh-100">
+        {% include 'messages.html' %}
         <div class="d-flex justify-content-center align-items-center">
         <div class="col col-lg-9 mb-4 mb-lg-0">
             {% if user.first_name or user.last_name or user.fun_fact or user.short_bio or user.photo %}
@@ -66,7 +67,6 @@
                             </div>
                             </div>
                         {% endif %}
-
                     </div>
                     </div>
                 </div>
@@ -78,8 +78,9 @@
             {% endif %}
         </div>
         </div>
+        
 
-    {% if notifications or messages or can_message_each_other %}
+    {% if notifications or can_message_each_other %}
         <div class="d-flex justify-content-center align-items-center pb-5">
         <div class="col col-lg-9 mb-4 mb-lg-0">
             <div class="card mb-3" style="border-radius: .5rem;">
@@ -118,7 +119,7 @@
                     </div>    
                     {% endif %}
 
-                    {% if messages %}
+                    {% comment %} {% if messages %}
                         <h6>Messages</h6>
                         <hr class="mt-0 mb-4">
                         <div class="row pt-1">
@@ -131,7 +132,7 @@
                             </ul>
                         </div>
                         </div>                        
-                    {% endif %}
+                    {% endif %} {% endcomment %}
 
                     
                     {% if can_message_each_other %}
